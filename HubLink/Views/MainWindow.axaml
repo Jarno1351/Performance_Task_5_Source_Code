@@ -1,0 +1,70 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="HubLink.Views.MainWindow"
+        Title="HubLink – Regional Logistics Data Exchange"
+        Width="980" Height="680" MinWidth="760" MinHeight="480">
+  <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto" Margin="16">
+
+    <StackPanel Grid.Row="0" Spacing="2">
+      <TextBlock Text="HubLink – Shipments" FontSize="22" FontWeight="SemiBold" />
+      <TextBlock Text="{Binding ServiceInfo}" Opacity="0.7" TextWrapping="Wrap" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="10" Margin="0,12,0,8">
+      <Button Content="{Binding RefreshButtonText}" Command="{Binding RefreshCommand}" MinWidth="90" />
+      <ProgressBar IsIndeterminate="True" Width="110" VerticalAlignment="Center" IsVisible="{Binding IsLoading}" />
+      <TextBlock Text="Status filter:" VerticalAlignment="Center" Margin="18,0,0,0" />
+      <ComboBox ItemsSource="{Binding StatusFilters}" SelectedItem="{Binding SelectedFilter}" Width="150" />
+      <Button Content="Export CSV…" Command="{Binding ExportCommand}" />
+    </StackPanel>
+
+    <StackPanel Grid.Row="2" Spacing="6">
+      <Border Background="#FDE7E9" BorderBrush="#C50F1F" BorderThickness="1" CornerRadius="4" Padding="10" IsVisible="{Binding HasError}">
+        <TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap" Foreground="#7A0A14" />
+      </Border>
+      <Border Background="#FFF4CE" BorderBrush="#9D5D00" BorderThickness="1" CornerRadius="4" Padding="10" IsVisible="{Binding IsStale}">
+        <TextBlock Text="{Binding StaleMessage}" TextWrapping="Wrap" Foreground="#5C3B00" />
+      </Border>
+      <Border Background="#DFF6DD" BorderBrush="#0E700E" BorderThickness="1" CornerRadius="4" Padding="10" IsVisible="{Binding HasInfo}">
+        <TextBlock Text="{Binding InfoMessage}" TextWrapping="Wrap" Foreground="#0B4F0B" />
+      </Border>
+      <Border Background="#DFF6DD" BorderBrush="#0E700E" BorderThickness="1" CornerRadius="4" Padding="10" IsVisible="{Binding HasExportSuccess}">
+        <TextBlock Text="{Binding ExportSuccessMessage}" TextWrapping="Wrap" Foreground="#0B4F0B" />
+      </Border>
+      <Border Background="#FDE7E9" BorderBrush="#C50F1F" BorderThickness="1" CornerRadius="4" Padding="10" IsVisible="{Binding HasExportError}">
+        <TextBlock Text="{Binding ExportErrorMessage}" TextWrapping="Wrap" Foreground="#7A0A14" />
+      </Border>
+    </StackPanel>
+
+    <Border Grid.Row="3" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="4" Padding="10" Margin="0,8,0,8">
+      <StackPanel Spacing="4">
+        <TextBlock Text="{Binding SummaryTitle}" FontWeight="SemiBold" />
+        <StackPanel Orientation="Horizontal" Spacing="22">
+          <TextBlock Text="{Binding TotalCount, StringFormat='Total: {0}'}" />
+          <TextBlock Text="{Binding PendingCount, StringFormat='Pending: {0}'}" />
+          <TextBlock Text="{Binding InTransitCount, StringFormat='InTransit: {0}'}" />
+          <TextBlock Text="{Binding DeliveredCount, StringFormat='Delivered: {0}'}" />
+          <TextBlock Text="{Binding ExceptionCount, StringFormat='Exception: {0}'}" />
+        </StackPanel>
+      </StackPanel>
+    </Border>
+
+    <Grid Grid.Row="4" RowDefinitions="Auto,*">
+      <TextBlock Grid.Row="0" Text="{Binding ListCaption}" Opacity="0.7" Margin="0,0,0,4" />
+      <DataGrid Grid.Row="1" ItemsSource="{Binding Shipments}" AutoGenerateColumns="False" IsReadOnly="True"
+                GridLinesVisibility="All" CanUserSortColumns="True" CanUserResizeColumns="True">
+        <DataGrid.Columns>
+          <DataGridTextColumn Header="Tracking Number" Binding="{Binding TrackingNumber}" Width="140" />
+          <DataGridTextColumn Header="Origin" Binding="{Binding Origin}" Width="*" />
+          <DataGridTextColumn Header="Destination" Binding="{Binding Destination}" Width="*" />
+          <DataGridTextColumn Header="Status" Binding="{Binding StatusText}" Width="110" />
+          <DataGridTextColumn Header="Last Updated (UTC)" Binding="{Binding LastUpdatedDisplay}" Width="170" />
+        </DataGrid.Columns>
+      </DataGrid>
+      <TextBlock Grid.Row="1" Text="{Binding EmptyMessage}" IsVisible="{Binding HasEmptyMessage}"
+                 HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Opacity="0.8" TextWrapping="Wrap" />
+    </Grid>
+
+    <TextBlock Grid.Row="5" Text="{Binding FooterText}" Opacity="0.7" Margin="0,8,0,0" TextWrapping="Wrap" />
+  </Grid>
+</Window>
